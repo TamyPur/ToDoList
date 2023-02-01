@@ -1,24 +1,10 @@
+const uriU = "/User";
+const uri = "/MyTask";
+var token = "";
+
 //    <!-- Log in -->
 const currentUsername = "";
 const currentUserpasswords = "";
-var token = "";
-var userid = -1;
-// JWT decode
-function parseJwt(token) {
-  var base64Url = token.split(".")[1];
-  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  var jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
-
-  return JSON.parse(jsonPayload);
-}
 
 const userLogin = () => {
   const username = document.getElementById("user-name");
@@ -37,7 +23,7 @@ const userLogin = () => {
     body: raw,
     redirect: "follow",
   };
-  fetch("https://localhost:7208/User/Login", requestOptions)
+  fetch(`${uriU}/Login`, requestOptions)
     .then((response) => response.text())
     .then((result) => {
       if (result.includes("401")) {
@@ -82,10 +68,9 @@ function updateDetails() {
     redirect: "follow",
   };
   debugger;
-  fetch("https://localhost:7208/User/GetCurrentUser", requestOptions)
+  fetch(`${uriU}/GetCurrentUser`, requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      alert(result.Name + " " + result.name)
       Dname.innerHTML = result.name;
       Dpassword.innerHTML =result.password;
 
@@ -103,14 +88,13 @@ function Encryption(password) {
 }
 
 //    <!-- User List -->
-const uriU = "/User";
 let users = [];
 const userList = document.getElementById("userList");
 
 function getUsers() {
   var myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${token}`); //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQWRtaW4iLCJ1c2VyaWQiOiIxIiwiZXhwIjoxNjc2NzYxODAyLCJpc3MiOiJodHRwczovL2ZiaS1kZW1vLmNvbSIsImF1ZCI6Imh0dHBzOi8vZmJpLWRlbW8uY29tIn0.YicN7qSw1UYOWI8-sKbHZxIKYA8LkShpkGf80dgJVPo"
-  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", `Bearer ${token}`); 
+   myHeaders.append("Content-Type", "application/json");
 
   var requestOptions = {
     method: "GET",
@@ -118,27 +102,23 @@ function getUsers() {
     redirect: "follow",
   };
   debugger;
-  fetch("https://localhost:7208/User/GetAll", requestOptions)
+  fetch(`${uriU}/GetAll`, requestOptions)
     .then(
-      (response) =>
-        // {
-        // if (response.status == 403) {
-        //   alert("403 Forbidden");
-        //   return;
-        // }
-        response.json()
-      // ;}
-    )
+      (response) =>{
+        // response.json()
+        if (response.status == 403) {
+          return Promise.reject("Unauthorized");
+        } else return response.json();
+        }  )
 
     .then((result) => {
-      // if(result==undefined) {
-      //   alert("byebye");
-      //   return;
-      // }
       userList.style.visibility = "visible";
       _displayUsers(result);
     })
-    .catch((error) => alert("error " + error));
+    .catch((error) => {
+      if (!(error == "Unauthorized"))
+        alert("unable to get users... \n" + error);
+    });
 }
 
 function addUser() {
@@ -166,16 +146,10 @@ function addUser() {
       addNameTextbox.value = "";
       addPasswordTextbox.value = "";
     })
-    .catch((error) => alert("Unable to add item. " + error));
+    .catch((error) => alert("error" + error));
 }
 
 function deleteUser(idToDelete) {
-  // fetch(`${uriU}/${id}`, {
-  //   method: "DELETE",
-  // })
-  //   .then(() => getUsers())
-  //   .catch((error) => console.error("Unable to delete item.", error));
-
   var myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   myHeaders.append("Content-Type", "application/json");
@@ -239,7 +213,6 @@ function _displayUsers(data) {
 }
 
 //    <!-- Task List -->
-const uri = "/MyTask";
 let tasks = [];
 
 function getItems() {

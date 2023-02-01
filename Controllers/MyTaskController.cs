@@ -24,7 +24,6 @@ namespace TaskList.Controllers
         public ActionResult<List<MyTask>> GetAll()
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-            Console.WriteLine(token);
             return TaskService.GetAll(token);
         }
 
@@ -49,20 +48,6 @@ namespace TaskList.Controllers
             TaskService.Add(task, token);
             return CreatedAtAction(nameof(Create), new { id = task.Id }, task);
         }
-
-
-        // [HttpPut("{id}")]
-        // [Authorize(Policy = "User")]
-        // public IActionResult Update(int id, MyTask task)
-        // {
-        //     if (id != task.Id)
-        //         return BadRequest();
-        //     var existingPizza = TaskService.Get(id);
-        //     if (existingPizza is null)
-        //         return NotFound();
-        //     TaskService.Update(task);
-        //     return NoContent();
-        // }
 
 [HttpPut("{id}")]
         [Authorize(Policy = "User")]

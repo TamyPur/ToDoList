@@ -53,7 +53,11 @@ namespace TaskList.Services
         public void Add(MyTask task, string token)
         {
             String idFromToken = TokenService.Decode(token);
-            task.Id = tasks.Count() + 1;
+            for(int i=0;i<tasks.Count();i++)
+                if(tasks[i].Id>task.Id)
+                    task.Id=tasks[i].Id;
+            task.Id ++;
+
             task.UserId= Convert.ToInt32(idFromToken);
             tasks.Add(task);
             saveToFile();

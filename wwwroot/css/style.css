@@ -1,11 +1,11 @@
 @font-face {
     font-family: myFont;
-    src: url("C:\Users\Tamar Berman\OneDrive\Documents\PROGRAMING\YEAR_2\CORE\HW core\אחרון עובד\TaskList\wwwroot\fonts\AmaticSC-Bold.ttf");
+    src: url("C:\\Users\\Tamar Berman\\OneDrive\\Documents\\PROGRAMING\\YEAR_2\\CORE\\HW core\\אחרון עובד\TaskList\wwwroot\fonts\AmaticSC-Bold.ttf");
   }
 body{
     font-family: myFont;
     margin: auto;
-    color: rgb(44, 84, 75);
+    color: rgb(50, 92, 83);
 }
 input[type='submit'],
 button,
@@ -35,4 +35,11 @@ td {
 
 .hidden{
     visibility: hidden;
+}
+
+button, select {
+    text-transform: none;
+    border-radius: 10px;
+    border: solid 0.5px gray;
+    background: none;
 }

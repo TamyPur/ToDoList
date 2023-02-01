@@ -50,7 +50,10 @@ namespace TaskList.Services
         }
         public void Add(User user)
         {
-            user.Id = users.Count() + 1;
+             for(int i=0;i<users.Count();i++)
+                if(users[i].Id>user.Id)
+                    user.Id=users[i].Id;
+            user.Id ++;
             users.Add(user);
             saveToFile();
         }
