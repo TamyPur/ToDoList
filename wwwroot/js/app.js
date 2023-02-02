@@ -29,15 +29,14 @@ const userLogin = () => {
       if (result.includes("401")) {
         username.value = "";
         userpasswords.value = "";
-
-        alert("לא קיים");
+        return Promise.reject("no")
       } else {
         this.token = result.toString();
         sessionStorage.setItem("token", token);
         location.href = "list.html";
       }
     })
-    .catch((error) => alert("error", error));
+    .catch((error) => alert("User not found..."));
 };
 
 // פונקצית בקרה
